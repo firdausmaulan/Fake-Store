@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Fake Store</string>
+    <!-- General Empty Message -->
+    <string name="empty_message">No data available</string>
+    <string name="empty_sub_message">Please check back later</string>
+    <!-- General Error Messages -->
+    <string name="error_message">Oops… Something went wrong</string>
+    <string name="error_sub_message">Please try again later</string>
+
+    <!-- Label -->
+    <string name="label_questions">Question</string>
+    <string name="label_empty">Empty</string>
+    <string name="label_error">Error</string>
+    <string name="label_close">Close</string>
+    <string name="label_search">Search</string>
+    <string name="label_confirmation">Are you sure?</string>
+
+    <!-- Action -->
+    <string name="action_ok">OK</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
+    <string name="action_back">Back</string>
+    <string name="action_retry">Retry</string>
+
+    <!-- Error Message -->
+    <string name="failed_download_message">Download failed.</string>
+    <string name="failed_download_sub_message">Do you want to retry?</string>
+</resources>
