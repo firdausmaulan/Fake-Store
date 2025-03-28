@@ -134,7 +134,7 @@ fun ProductListScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(products) { product ->
-                            ProductItem(product = product)
+                            ProductItem(product = product, onProductClick)
                         }
                     }
                 }
@@ -142,7 +142,7 @@ fun ProductListScreen(
                 is ProductListState.Error -> {
                     ErrorScreen(
                         message = (state as ProductListState.Error).message,
-                        onRetry = { viewModel.fetchProducts() }
+                        onRetry = { viewModel.getProducts() }
                     )
                 }
             }
@@ -198,7 +198,7 @@ fun ProductListScreenPreview() {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(dummyProducts) { product ->
-                ProductItem(product = product)
+                ProductItem(product = product, {})
             }
         }
     }

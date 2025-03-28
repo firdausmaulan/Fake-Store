@@ -40,8 +40,8 @@ object ViewModelModule {
 
     @Provides
     @ViewModelScoped
-    fun provideProductDetailViewModel(productRepository: IProductRepository): ProductDetailViewModel {
-        return ProductDetailViewModel(productRepository)
+    fun provideProductDetailViewModel(productRepository: IProductRepository, cartRepository: ICartRepository): ProductDetailViewModel {
+        return ProductDetailViewModel(productRepository, cartRepository)
     }
 
     @Provides

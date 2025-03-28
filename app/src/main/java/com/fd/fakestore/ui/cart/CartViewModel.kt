@@ -29,7 +29,7 @@ class CartViewModel @Inject constructor(
 
     fun saveCartItem(cartItem: Cart) {
         viewModelScope.launch {
-            cartRepository.saveCartItem(cartItem)
+            // cartRepository.saveToCart(cartItem)
             getCartItems(cartItem.userId)
         }
     }

@@ -42,8 +42,9 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideCartRepository(
-        cartDao: CartDao
+        cartDao: CartDao,
+        appPreference: AppPreference
     ): ICartRepository {
-        return CartRepositoryImpl(cartDao)
+        return CartRepositoryImpl(cartDao, appPreference)
     }
 }

@@ -26,20 +26,37 @@ class ProductListViewModel @Inject constructor(
     private var currentQuery: String? = null
 
     init {
-        fetchProducts()
+        getProducts()
     }
 
-    fun fetchProducts() {
+    fun getProducts() {
         viewModelScope.launch {
-            productRepository.getProducts(
+            productRepository.getProducts().map { result ->
+                result.fold(
+                    onSuccess = { products ->
+                        allCategories = products.map { it.category }.distinct().map { Category(it) }
+                        ProductListState.Success(products, allCategories)
+                    },
+                    onFailure = { error ->
+                        ProductListState.Error(error.message ?: "Unknown Error")
+                    }
+                )
+            }.catch { error ->
+                _state.update { ProductListState.Error(error.message ?: "Unknown Error") }
+            }.collect { newState ->
+                _state.update { newState }
+            }
+        }
+    }
+
+    private fun getFilteredProducts() {
+        viewModelScope.launch {
+            productRepository.getFilteredProducts(
                 selectedCategories.takeIf { it.isNotEmpty() },
                 currentQuery
             ).map { result ->
                 result.fold(
                     onSuccess = { products ->
-                        if (allCategories.isEmpty()) {
-                            allCategories = products.map { it.category }.distinct().map { Category(it) }
-                        }
                         val categories = allCategories.map { it.copy(selected = selectedCategories.contains(it.name)) }
                         ProductListState.Success(products, categories)
                     },
@@ -57,7 +74,7 @@ class ProductListViewModel @Inject constructor(
 
     fun searchProducts(query: String) {
         currentQuery = query.takeIf { it.isNotEmpty() }
-        fetchProducts()
+        getFilteredProducts()
     }
 
     fun toggleCategorySelection(categoryName: String) {
@@ -66,6 +83,6 @@ class ProductListViewModel @Inject constructor(
         } else {
             selectedCategories.add(categoryName)
         }
-        fetchProducts()
+        getFilteredProducts()
     }
 }

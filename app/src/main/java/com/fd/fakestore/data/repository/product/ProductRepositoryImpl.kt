@@ -13,7 +13,7 @@ class ProductRepositoryImpl @Inject constructor(
     private val productDao: ProductDao
 ) : IProductRepository {
 
-    override fun getProducts(categories: List<String>?, query: String?): Flow<Result<List<Product>>> = flow {
+    override fun getProducts(): Flow<Result<List<Product>>> = flow {
         try {
             val apiResult = productApiService.getProducts()
             if (apiResult.isSuccess) {
@@ -33,17 +33,26 @@ class ProductRepositoryImpl @Inject constructor(
             return@flow
         }
 
-        var filteredProducts = localProducts
+        emit(Result.success(localProducts))
+    }
+
+    override fun getFilteredProducts(categories: List<String>?, query: String?): Flow<Result<List<Product>>> = flow {
+        var localProducts = try {
+            productDao.getProducts().firstOrNull() ?: emptyList()
+        } catch (e: Exception) {
+            emit(Result.failure(e))
+            return@flow
+        }
 
         if (!categories.isNullOrEmpty()) {
-            filteredProducts = filteredProducts.filter { it.category in categories }
+            localProducts = localProducts.filter { it.category in categories }
         }
 
         if (!query.isNullOrEmpty()) {
-            filteredProducts = filteredProducts.filter { it.title.contains(query, ignoreCase = true) }
+            localProducts = localProducts.filter { it.title.contains(query, ignoreCase = true) }
         }
 
-        emit(Result.success(filteredProducts))
+        emit(Result.success(localProducts))
     }
 
     override fun getProductById(productId: Int): Flow<Result<Product>> = flow {

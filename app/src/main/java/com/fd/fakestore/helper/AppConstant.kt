@@ -1,4 +1,7 @@
 package com.fd.fakestore.helper
 
-class AppConstant {
+object AppConstant {
+
+    const val KEY_PRODUCT_ID = "productId"
+
 }

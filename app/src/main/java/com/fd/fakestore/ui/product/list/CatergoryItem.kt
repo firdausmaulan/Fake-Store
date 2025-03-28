@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.fd.fakestore.data.model.Category
 
@@ -17,10 +18,11 @@ fun CategoryItem(category: Category, onCategoryClick: (String) -> Unit) {
         modifier = Modifier
             .padding(horizontal = 4.dp)
             .clickable { onCategoryClick(category.name ?: "") },
-        colors = CardDefaults.cardColors(if (category.selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(if (category.selected) MaterialTheme.colorScheme.secondary else Color.White)
     ) {
         Text(
             text = category.name ?: "Unknown",
+            color = Color.Black,
             modifier = Modifier.padding(8.dp)
         )
     }
