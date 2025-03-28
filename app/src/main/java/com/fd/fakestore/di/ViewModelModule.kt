@@ -1,6 +1,5 @@
 package com.fd.fakestore.di
 
-import com.fd.fakestore.data.local.preference.AppPreference
 import com.fd.fakestore.data.repository.cart.ICartRepository
 import com.fd.fakestore.data.repository.product.IProductRepository
 import com.fd.fakestore.data.repository.user.IUserRepository
@@ -28,8 +27,8 @@ object ViewModelModule {
 
     @Provides
     @ViewModelScoped
-    fun provideProfileViewModel(userRepository: IUserRepository, appPreference: AppPreference): ProfileViewModel {
-        return ProfileViewModel(userRepository, appPreference)
+    fun provideProfileViewModel(userRepository: IUserRepository): ProfileViewModel {
+        return ProfileViewModel(userRepository)
     }
 
     @Provides

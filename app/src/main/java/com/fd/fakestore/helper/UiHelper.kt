@@ -20,9 +20,9 @@ object UiHelper {
     fun topAppBarColors(): TopAppBarColors {
         return TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            titleContentColor = MaterialTheme.colorScheme.tertiary,
-            navigationIconContentColor = MaterialTheme.colorScheme.tertiary,
-            actionIconContentColor = MaterialTheme.colorScheme.tertiary,
+            titleContentColor = Color.White,
+            navigationIconContentColor = Color.White,
+            actionIconContentColor = Color.White,
         )
     }
 

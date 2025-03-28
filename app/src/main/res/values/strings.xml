@@ -14,6 +14,21 @@
     <string name="label_close">Close</string>
     <string name="label_search">Search</string>
     <string name="label_confirmation">Are you sure?</string>
+    <string name="label_profile">Profile</string>
+    <string name="label_cart">Cart</string>
+    <string name="label_check_out">Check Out</string>
+    <string name="label_login">Login</string>
+    <string name="label_logout">Logout</string>
+    <string name="label_quantity">Quantity</string>
+    <string name="label_price">Price</string>
+    <string name="label_order">Order</string>
+    <string name="label_user_information">User Information</string>
+    <string name="label_name">Name</string>
+    <string name="label_phone">Phone</string>
+    <string name="label_address">Address</string>
+    <string name="label_username">Username</string>
+    <string name="label_password">Password</string>
+    <string name="label_add_to_cart">Add to Cart</string>
 
     <!-- Action -->
     <string name="action_ok">OK</string>
@@ -22,7 +37,9 @@
     <string name="action_back">Back</string>
     <string name="action_retry">Retry</string>
 
-    <!-- Error Message -->
-    <string name="failed_download_message">Download failed.</string>
-    <string name="failed_download_sub_message">Do you want to retry?</string>
+    <!-- Empty Message -->
+    <string name="empty_product_message">No products found</string>
+    <string name="empty_product_sub_message">Try searching for something else</string>
+    <string name="empty_cart_message">Your cart is empty</string>
+    <string name="empty_cart_sub_message">Add items to your cart to proceed to checkout</string>
 </resources>

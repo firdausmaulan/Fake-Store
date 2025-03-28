@@ -15,16 +15,14 @@ class CartRepositoryImpl @Inject constructor(
     private val appPreference: AppPreference
 ) : ICartRepository {
 
-    override suspend fun saveToCart(product: Product) {
+    override suspend fun addToCart(product: Product) {
         val userId = appPreference.userId.first() ?: 0
-        val existingCartItem = cartDao.getCartItemByProductId(product.id, userId).firstOrNull()
-        if (existingCartItem != null) {
-            val updatedCartItem = existingCartItem.copy(quantity = existingCartItem.quantity + 1)
-            cartDao.updateCartItem(updatedCartItem)
-        } else {
-            val cartItem = Cart(productId = product.id, userId = userId, quantity = 1)
-            cartDao.insertCartItem(cartItem)
-        }
+        val cartItem = Cart(productId = product.id, userId = userId, quantity = 1)
+        cartDao.insertCartItem(cartItem)
+    }
+
+    override suspend fun updateCart(cartWithProduct: CartWithProduct) {
+        cartDao.updateCartItem(cartWithProduct.cart)
     }
 
     override suspend fun isProductInCart(productId: Int): Boolean {
@@ -32,11 +30,21 @@ class CartRepositoryImpl @Inject constructor(
         return cartDao.getCartItemByProductId(productId, userId).firstOrNull() != null
     }
 
-    override suspend fun deleteCartByProductId(productId: Int, userId: Int) {
-        cartDao.deleteCartByProductId(productId, userId)
+    override suspend fun deleteCartById(cartId: Int) {
+        cartDao.deleteCartById(cartId)
     }
 
-    override fun getCartItemsWithProducts(userId: Int): Flow<List<CartWithProduct>> {
+    override suspend fun deleteCarts(cartIds : List<Int>) {
+        cartDao.deleteCarts(cartIds)
+    }
+
+    override suspend fun getCartItemsWithProducts(): Flow<List<CartWithProduct>> {
+        val userId = appPreference.userId.first() ?: 0
         return cartDao.getCartItemsWithProducts(userId)
+    }
+
+    override suspend fun getCartItemsByIds(cartIds: List<Int>): Flow<List<CartWithProduct>> {
+        val userId = appPreference.userId.first() ?: 0
+        return cartDao.getCartItemsByIds(cartIds, userId)
     }
 }

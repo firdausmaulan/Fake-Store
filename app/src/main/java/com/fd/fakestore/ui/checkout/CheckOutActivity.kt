@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.fd.fakestore.helper.AppConstant
 import com.fd.fakestore.ui.login.LoginScreen
 import com.fd.fakestore.ui.theme.FakeStoreTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,10 +20,18 @@ import dagger.hilt.android.AndroidEntryPoint
 class CheckOutActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             FakeStoreTheme {
-                LoginScreen()
+                CheckoutScreen(
+                    onBack = {
+                        finish()
+                    },
+                    onSuccessfulOrder = {
+                        setResult(RESULT_OK)
+                        finish()
+                    },
+                    cartIds = intent.getIntegerArrayListExtra(AppConstant.KEY_SELECTED_CART_IDS) ?: emptyList()
+                )
             }
         }
     }

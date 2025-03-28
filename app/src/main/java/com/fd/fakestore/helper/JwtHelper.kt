@@ -5,7 +5,7 @@ import org.json.JSONObject
 
 object JwtHelper {
 
-    fun decodeJwt(token: String): JSONObject? {
+    private fun decodeJwt(token: String): JSONObject? {
         try {
             val parts = token.split(".")
             if (parts.size != 3) {
@@ -27,7 +27,7 @@ object JwtHelper {
         return String(decodedBytes)
     }
 
-    fun getClaim(token: String, claimName: String): Any? {
+    private fun getClaim(token: String, claimName: String): Any? {
         val decoded = decodeJwt(token)
         return decoded?.opt(claimName)
     }

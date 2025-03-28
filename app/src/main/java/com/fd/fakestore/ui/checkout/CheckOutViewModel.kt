@@ -2,6 +2,7 @@ package com.fd.fakestore.ui.checkout
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fd.fakestore.data.model.CartWithProduct
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,12 +21,12 @@ class CheckoutViewModel @Inject constructor(
     private val _state = MutableStateFlow<CheckoutState>(CheckoutState.Loading)
     val state: StateFlow<CheckoutState> = _state
 
-    fun getCheckoutDetails(userId: Int) {
+    fun getCheckoutDetails(cartIds : List<Int>) {
         viewModelScope.launch {
-            cartRepository.getCartItemsWithProducts(userId).collect { cartItems ->
+            cartRepository.getCartItemsByIds(cartIds).collect { cartItems ->
                 if (cartItems.isNotEmpty()) {
                     val totalPrice = cartItems.sumOf { it.product.price * it.cart.quantity }
-                    val userResult = userRepo.getUserById(userId)
+                    val userResult = userRepo.getUserData()
                     if (userResult.isSuccess) {
                         val user = userResult.getOrNull()
                         if (user != null) {
@@ -40,6 +41,13 @@ class CheckoutViewModel @Inject constructor(
                     _state.update { CheckoutState.Error("Cart is empty") }
                 }
             }
+        }
+    }
+
+    fun placeOrder(cartItems: List<CartWithProduct>) {
+        viewModelScope.launch {
+            val cartIds = cartItems.map { it.cart.cartId }
+            cartRepository.deleteCarts(cartIds)
         }
     }
 }

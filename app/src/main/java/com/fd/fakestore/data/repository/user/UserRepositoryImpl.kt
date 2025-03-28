@@ -30,7 +30,8 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserById(userId: Int): Result<User> {
+    override suspend fun getUserData(): Result<User> {
+        val userId = appPreference.userId.first() ?: return Result.failure(Exception("User ID not found"))
         return userApiService.getUserById(userId)
     }
 

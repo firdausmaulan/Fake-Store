@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.fd.fakestore.helper.AppConstant
+import com.fd.fakestore.ui.cart.CartActivity
+import com.fd.fakestore.ui.login.LoginActivity
 import com.fd.fakestore.ui.login.LoginScreen
 import com.fd.fakestore.ui.product.detail.ProductDetailActivity
 import com.fd.fakestore.ui.theme.FakeStoreTheme
@@ -29,6 +31,13 @@ class ProductListActivity : ComponentActivity() {
                         val intent = Intent(this, ProductDetailActivity::class.java)
                         intent.putExtra(AppConstant.KEY_PRODUCT_ID, product.id)
                         startActivity(intent)
+                    },
+                    onCartClick = {
+                        startActivity(Intent(this, CartActivity::class.java))
+                    },
+                    onLogout = {
+                        startActivity(Intent(this, LoginActivity::class.java))
+                        finishAffinity()
                     }
                 )
             }

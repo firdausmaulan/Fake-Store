@@ -1,5 +1,6 @@
 package com.fd.fakestore.data.api.core
 
+import com.fd.fakestore.BuildConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -19,7 +20,7 @@ import java.io.IOException
 
 object AppHttpClient {
 
-    const val BASE_URL = "https://fakestoreapi.com/"
+    const val BASE_URL = BuildConfig.BASE_URL
 
     val httpClient = HttpClient {
         install(ContentNegotiation) {

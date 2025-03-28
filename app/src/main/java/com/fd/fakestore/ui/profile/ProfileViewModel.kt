@@ -14,8 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val userRepository: IUserRepository,
-    private val appPreference: AppPreference
+    private val userRepository: IUserRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<ProfileState>(ProfileState.Loading)
@@ -23,7 +22,7 @@ class ProfileViewModel @Inject constructor(
 
     fun getUserDetail() {
         viewModelScope.launch {
-            val result = userRepository.getUserById(appPreference.userId.first() ?: 0)
+            val result = userRepository.getUserData()
             if (result.isSuccess) {
                 val user = result.getOrNull()
                 if (user != null) {
@@ -34,6 +33,12 @@ class ProfileViewModel @Inject constructor(
             } else {
                 _state.update { ProfileState.Error(result.exceptionOrNull()?.message ?: "Unknown Error") }
             }
+        }
+    }
+
+    fun clearUserData() {
+        viewModelScope.launch {
+            userRepository.clearUserData()
         }
     }
 }

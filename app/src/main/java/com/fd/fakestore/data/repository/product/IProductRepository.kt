@@ -7,8 +7,6 @@ interface IProductRepository {
 
     fun getProducts(): Flow<Result<List<Product>>>
 
-    fun getFilteredProducts(categories: List<String>? = null, query: String? = null): Flow<Result<List<Product>>>
-
     fun getProductById(productId: Int): Flow<Result<Product>>
 
 }

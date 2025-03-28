@@ -25,11 +25,17 @@ interface CartDao {
     @Query("SELECT * FROM t_cart WHERE productId = :productId AND userId = :userId")
     fun getCartItemByProductId(productId: Int, userId: Int): Flow<Cart?>
 
-    @Query("DELETE FROM t_cart WHERE productId = :productId AND userId = :userId")
-    suspend fun deleteCartByProductId(productId: Int, userId: Int)
+    @Query("DELETE FROM t_cart WHERE cartId = :cartId")
+    suspend fun deleteCartById(cartId: Int)
+
+    @Query("DELETE FROM t_cart WHERE cartId IN (:cartIds)")
+    suspend fun deleteCarts(cartIds: List<Int>)
 
     @Transaction
     @Query("SELECT * FROM t_cart WHERE userId = :userId")
     fun getCartItemsWithProducts(userId: Int): Flow<List<CartWithProduct>>
 
+    @Transaction
+    @Query("SELECT * FROM t_cart WHERE cartId IN (:cartIds) AND userId = :userId")
+    fun getCartItemsByIds(cartIds: List<Int>, userId: Int): Flow<List<CartWithProduct>>
 }

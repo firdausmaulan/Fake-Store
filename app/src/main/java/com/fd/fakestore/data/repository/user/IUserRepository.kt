@@ -7,7 +7,7 @@ interface IUserRepository {
 
     suspend fun isAuthenticated(): Boolean
     suspend fun login(username: String, password: String): Result<User>
-    suspend fun getUserById(userId: Int): Result<User>
+    suspend fun getUserData(): Result<User>
     val token: Flow<String?>
     val userId: Flow<Int?>
     suspend fun clearUserData()

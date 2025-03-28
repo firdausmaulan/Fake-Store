@@ -36,25 +36,6 @@ class ProductRepositoryImpl @Inject constructor(
         emit(Result.success(localProducts))
     }
 
-    override fun getFilteredProducts(categories: List<String>?, query: String?): Flow<Result<List<Product>>> = flow {
-        var localProducts = try {
-            productDao.getProducts().firstOrNull() ?: emptyList()
-        } catch (e: Exception) {
-            emit(Result.failure(e))
-            return@flow
-        }
-
-        if (!categories.isNullOrEmpty()) {
-            localProducts = localProducts.filter { it.category in categories }
-        }
-
-        if (!query.isNullOrEmpty()) {
-            localProducts = localProducts.filter { it.title.contains(query, ignoreCase = true) }
-        }
-
-        emit(Result.success(localProducts))
-    }
-
     override fun getProductById(productId: Int): Flow<Result<Product>> = flow {
         try {
             val result = productDao.getProductById(productId)

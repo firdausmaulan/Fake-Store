@@ -1,5 +1,6 @@
 package com.fd.fakestore.ui.product.list
 
+import EmptyScreen
 import ErrorScreen
 import LoadingScreen
 import androidx.compose.foundation.background
@@ -37,9 +38,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.fd.fakestore.R
 import com.fd.fakestore.data.model.Category
 import com.fd.fakestore.data.model.Product
 import com.fd.fakestore.helper.AppColor
@@ -52,6 +55,7 @@ fun ProductListScreen(
     viewModel: ProductListViewModel = hiltViewModel(),
     onCartClick: () -> Unit = {},
     onProductClick: (Product) -> Unit = {},
+    onLogout: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
@@ -71,7 +75,13 @@ fun ProductListScreen(
                     onDismissRequest = { isSheetOpen = false },
                     containerColor = Color.White
                 ) {
-                    ProfileScreen(onDismiss = { isSheetOpen = false })
+                    ProfileScreen(
+                        onDismiss = { isSheetOpen = false },
+                        onLogout = {
+                            isSheetOpen = false
+                            onLogout()
+                        }
+                    )
                 }
             }
 
@@ -86,7 +96,7 @@ fun ProductListScreen(
                     searchQuery = it
                     viewModel.searchProducts(it)
                 }
-                IconButton(onClick = { /* TODO: Navigate to Cart */ }) {
+                IconButton(onClick = onCartClick ) {
                     Icon(
                         Icons.Filled.ShoppingCart,
                         contentDescription = "Cart",
@@ -127,14 +137,21 @@ fun ProductListScreen(
 
                 is ProductListState.Success -> {
                     val products = (state as ProductListState.Success).products
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        contentPadding = PaddingValues(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(products) { product ->
-                            ProductItem(product = product, onProductClick)
+                    if (products.isEmpty()) {
+                        EmptyScreen(
+                            message = stringResource(R.string.empty_product_message),
+                            subMessage = stringResource(R.string.empty_product_sub_message)
+                        )
+                    } else {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            contentPadding = PaddingValues(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(products) { product ->
+                                ProductItem(product = product, onProductClick)
+                            }
                         }
                     }
                 }

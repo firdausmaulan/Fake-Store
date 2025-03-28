@@ -3,6 +3,7 @@ package com.fd.fakestore.ui.product.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fd.fakestore.data.model.Category
+import com.fd.fakestore.data.model.Product
 import com.fd.fakestore.data.repository.product.IProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,7 @@ class ProductListViewModel @Inject constructor(
     private val _state = MutableStateFlow<ProductListState>(ProductListState.Loading)
     val state: StateFlow<ProductListState> = _state
 
+    private var allProducts: List<Product> = emptyList()
     private var allCategories: List<Category> = emptyList()
     private var selectedCategories: MutableList<String> = mutableListOf()
     private var currentQuery: String? = null
@@ -34,6 +36,7 @@ class ProductListViewModel @Inject constructor(
             productRepository.getProducts().map { result ->
                 result.fold(
                     onSuccess = { products ->
+                        allProducts = products
                         allCategories = products.map { it.category }.distinct().map { Category(it) }
                         ProductListState.Success(products, allCategories)
                     },
@@ -51,24 +54,17 @@ class ProductListViewModel @Inject constructor(
 
     private fun getFilteredProducts() {
         viewModelScope.launch {
-            productRepository.getFilteredProducts(
-                selectedCategories.takeIf { it.isNotEmpty() },
-                currentQuery
-            ).map { result ->
-                result.fold(
-                    onSuccess = { products ->
-                        val categories = allCategories.map { it.copy(selected = selectedCategories.contains(it.name)) }
-                        ProductListState.Success(products, categories)
-                    },
-                    onFailure = { error ->
-                        ProductListState.Error(error.message ?: "Unknown Error")
-                    }
-                )
-            }.catch { error ->
-                _state.update { ProductListState.Error(error.message ?: "Unknown Error") }
-            }.collect { newState ->
-                _state.update { newState }
+            var filteredProducts: List<Product> = if (selectedCategories.isNotEmpty()) {
+                allProducts.filter { it.category in selectedCategories }
+            } else {
+                allProducts
             }
+
+            if (!currentQuery.isNullOrEmpty()) {
+                filteredProducts = filteredProducts.filter { it.title.contains(currentQuery ?: "", ignoreCase = true) }
+            }
+            val categories = allCategories.map { it.copy(selected = selectedCategories.contains(it.name)) }
+            _state.update { ProductListState.Success(filteredProducts, categories) }
         }
     }
 

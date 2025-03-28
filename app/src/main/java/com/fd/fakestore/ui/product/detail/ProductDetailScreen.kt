@@ -37,10 +37,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.fd.fakestore.R
 import com.fd.fakestore.data.model.Product
 import com.fd.fakestore.helper.UiHelper
 import com.fd.fakestore.ui.common.NetworkImage
@@ -49,12 +50,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProductDetailScreen(
     productId: Int,
-    viewModel: ProductDetailViewModel = hiltViewModel(),
+    viewModel: ProductDetailViewModel,
     onClose: () -> Unit,
     onCartClick: () -> Unit
 ) {
 
-    LaunchedEffect(productId) {
+    LaunchedEffect(Unit) {
+        println("ProductDetailScreen LaunchedEffect")
         viewModel.isProductInCart(productId)
         viewModel.getProductDetail(productId)
     }
@@ -65,7 +67,12 @@ fun ProductDetailScreen(
         }
 
         is ProductDetailState.Success -> {
-            ProductDetailContent(viewModel, state.product, onClose, onCartClick)
+            ProductDetailContent(
+                viewModel,
+                state.product,
+                onClose,
+                onCartClick
+            )
         }
 
         is ProductDetailState.Error -> {
@@ -188,6 +195,7 @@ fun ProductDetailContent(
                     scope.launch {
                         viewModel.addToCart(product)
                         Toast.makeText(context, "Product added to cart", Toast.LENGTH_SHORT).show()
+                        onCartClick()
                     }
                 },
                 modifier = Modifier
@@ -196,7 +204,7 @@ fun ProductDetailContent(
                     .padding(16.dp),
                 elevation = UiHelper.buttonElevation()
             ) {
-                Text(text = "Add to Cart")
+                Text(text = stringResource(R.string.label_add_to_cart))
             }
         }
     }

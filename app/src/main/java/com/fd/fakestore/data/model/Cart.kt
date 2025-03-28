@@ -13,7 +13,7 @@ data class Cart(
     @SerialName("productId")
     val productId: Int,
     @SerialName("quantity")
-    val quantity: Int,
+    var quantity: Int,
     @SerialName("userId")
     val userId: Int
 )

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -21,9 +22,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fd.fakestore.R
 import com.fd.fakestore.data.model.User
+import com.fd.fakestore.helper.UiHelper
 
 @Composable
-fun ProfileContent(user: User) {
+fun ProfileContent(user: User, onLogout: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -109,5 +111,17 @@ fun ProfileContent(user: User) {
                 disabledTextColor = Color.Black,
             )
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = {
+                onLogout()
+            },
+            elevation = UiHelper.buttonElevation(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text("Logout")
+        }
     }
 }
